@@ -1,7 +1,7 @@
 pipepline {
           agent any {
           stages {
-            stage (1. Git Code checking) {
+            stage (1. Git-code checking) {
               steps {
                    checkout scm
             }
