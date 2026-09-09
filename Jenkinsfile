@@ -33,7 +33,7 @@ pipeline {
                                                   usernameVariable : 'DH_USER',
                                                   passwordVariable : 'DH_PASSWORD')]) {
                     // Secure login via piped input
-                    sh 'echo "${DH_PASSWORD}" | docker login -u "${DH_USER}" --password-stdin'
+                    sh "echo \$DH_PASSWORD | docker login -u \$DH_USER --password-stdin"
                     
                     // 1. Tag and push the FRONTEND service
                     sh "docker tag voting-app-frontend:latest ${DOCKER_USER}/${DOCKER_IMAGE}-frontend:${IMAGE_TAG}"
