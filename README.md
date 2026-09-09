@@ -17,7 +17,7 @@ Before running the pipeline locally or on a custom runner, ensure the following 
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com
+   git clone https://github.com/NiranjanHulamudde/Docker-voting-app
    cd YOUR_REPO_NAME
    ```
 
