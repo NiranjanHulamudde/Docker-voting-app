@@ -25,6 +25,7 @@ pipeline {
                 // This will read your docker-compose.yml file and build all components
                 sh 'docker compose build'
             }
+        }
         stage('4. Pushing the image to dockerhub') {
             steps {
                 echo 'Pushing the image to Docker-Hub.'
@@ -45,5 +46,4 @@ pipeline {
         }
     }
 }
-    }
     }
