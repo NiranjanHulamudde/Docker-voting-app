@@ -16,7 +16,7 @@ pipeline {
         stage('3. Build All Services') {
             steps {
                 // This will read your docker-compose.yml file and build all components
-                sh 'docker compose build'
+                sh 'docker build -t voting_app:latest .'
             }
         }
     }
