@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         DOCKER_USER = 'niranjanhulamudde'
-        DOCKER_IMAGE = 'Voting-app'
-        IMAGE_TAG = 'Latest'
+        DOCKER_IMAGE = 'voting-app'
+        IMAGE_TAG = 'latest'
     }
 
     stages {
@@ -32,10 +32,11 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId : 'docker-pass',
                                                   usernameVariable : 'DH_USER',
                                                   passwordVariable : 'DH_PASSWORD')]) {
-                    echo "echo \$DH_PASSWORD | docker llogin -u \$DH_USER --password-stdin"
-                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}:{IMAGE_TAG}"
+                    echo "echo \$DH_PASSWORD | docker login -u \$DH_USER --password-stdin"
+                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}:${IMAGE_TAG}"
                 }
         }
+    }
     }
     post {
         success {
@@ -46,4 +47,4 @@ pipeline {
         }
     }
 }
-    }
+
