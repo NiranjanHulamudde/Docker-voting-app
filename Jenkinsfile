@@ -40,8 +40,8 @@ pipeline {
                     sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}-frontend:${IMAGE_TAG}"
                     
                     // 2. Tag and push the BACKEND service
-                    sh "docker tag voting-app-backend:latest ${DOCKER_USER}/${PROJECT_NAME}-backend:${IMAGE_TAG}"
-                    sh "docker push ${DOCKER_USER}/${PROJECT_NAME}-backend:${IMAGE_TAG}"                    
+                    sh "docker tag voting-app-backend:latest ${DOCKER_USER}/${DOCKER_IMAGE}-backend:${IMAGE_TAG}"
+                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}-backend:${IMAGE_TAG}"                    
                 }
         }
     }
