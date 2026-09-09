@@ -31,7 +31,7 @@ pipeline {
                                                   usernameVariable : 'DH_USER',
                                                   passwordVariable : 'DH_PASSWORD')]) {
                     echo "echo \$DH_PASSWORD | docker llogin -u \$DH_USER --password-stdin"
-                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}:{IMAGE_TAG}
+                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}:{IMAGE_TAG}"
                 }
         }
     }
