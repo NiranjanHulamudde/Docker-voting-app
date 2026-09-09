@@ -15,3 +15,11 @@ pipeline {
         }
     }
 }
+    post {
+        success {
+            echo 'Build was succesful.'
+        }
+        failure {
+            echo 'Build was Un-succesful.'
+        }
+}
