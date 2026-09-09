@@ -1,6 +1,6 @@
 # Voting App
 
-A multi-container application demonstrating Docker, docker-compose, and microservices architecture.
+A multi-container application demonstrating Docker, docker-compose, and microservices architecture. 
 
 ## Architecture
 
