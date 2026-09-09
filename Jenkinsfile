@@ -1,5 +1,5 @@
 pipepline {
-          agent any {
+          agent any 
           stages {
             stage ('1. git-code checking') {
               steps {
@@ -14,4 +14,3 @@ pipepline {
             }
           }
           }
-}
