@@ -32,8 +32,16 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId : 'docker-pass',
                                                   usernameVariable : 'DH_USER',
                                                   passwordVariable : 'DH_PASSWORD')]) {
-                    echo "echo \$DH_PASSWORD | docker login -u \$DH_USER --password-stdin"
-                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}:${IMAGE_TAG}"
+                    // Secure login via piped input
+                    sh "echo \$DH_PASSWORD | docker login -u \$DH_USER --password-stdin"
+                    
+                    // 1. Tag and push the FRONTEND service
+                    sh "docker tag voting-app-frontend:latest ${DOCKER_USER}/${DOCKER_IMAGE}-frontend:${IMAGE_TAG}"
+                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}-frontend:${IMAGE_TAG}"
+                    
+                    // 2. Tag and push the BACKEND service
+                    sh "docker tag voting-app-backend:latest ${DOCKER_USER}/${PROJECT_NAME}-backend:${IMAGE_TAG}"
+                    sh "docker push ${DOCKER_USER}/${PROJECT_NAME}-backend:${IMAGE_TAG}"                    
                 }
         }
     }
