@@ -5,6 +5,7 @@ pipeline {
         DOCKER_USER = 'niranjanhulamudde'
         DOCKER_IMAGE = 'Voting-app'
         IMAGE_TAG = 'Latest'
+    }
 
     stages {
         stage('1. Git Code Checkout') {
@@ -46,4 +47,3 @@ pipeline {
 }
     }
     }
-}
