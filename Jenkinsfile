@@ -1,6 +1,11 @@
 pipeline {
     agent any 
 
+    environment {
+        DOCKER_USER = 'niranjanhulamudde'
+        DOCKER_IMAGE = 'Voting-app'
+        IMAGE_TAG = 'Latest'
+
     stages {
         stage('1. Git Code Checkout') {
             steps {
@@ -19,14 +24,26 @@ pipeline {
                 // This will read your docker-compose.yml file and build all components
                 sh 'docker compose build'
             }
+        stage(4. Pushing the image to dockerhub) {
+            steps {
+                echo 'Pushing the image to Docker-Hub.'
+                withCredentials([usernamePassword(credentialsId : 'docker-pass',
+                                                  usernameVariable : 'DH_USER',
+                                                  passwordVariable : 'DH_PASSWORD')]) {
+                    echo "echo \$DH_PASSWORD | docker llogin -u \$DH_USER --password-stdin"
+                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}:{IMAGE_TAG}
+                }
         }
     }
     post {
         success {
-            echo 'Build was succesful.'
+            echo 'Build was succesful and Image pushed to Dockerhub succesfully.'
         }
         failure {
-            echo 'Build was Un-succesful.'
+            echo 'Build was Un-succesful hence image was not pushed to Dockerhub.'
         }
+    }
+}
+    }
     }
 }
