@@ -7,7 +7,7 @@ pipeline {
                 checkout scm
             }
         }
-        stage(2. Code linting) {
+        stage('2. Code linting') {
             steps {
                 dir('backend') {
                     sh 'pip install flake8 && flake8 . --count --select=E9,F63,F7,F82 --statistics || echo "Skipping linting"'                
