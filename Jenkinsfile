@@ -1,57 +1,56 @@
 pipeline {
-    agent any 
+        agent any
 
-    environment {
+        environment {
         DOCKER_USER  = 'niranjanhulamudde'
         DOCKER_IMAGE = 'voting-app'
         IMAGE_TAG    = 'latest'
+        AWS_REGION = 'US-EAST-1'
     }
-
-    stages {
-        stage('1. Git Code Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-        stage('2. Code linting') {
-            steps {
-                dir('backend') {
-                    sh 'pip install flake8 && flake8 . --count --select=E9,F63,F7,F82 --statistics || echo "Skipping linting"'                
-                } 
-            }
-        }
-        stage('3. Build All Services') {
-            steps {
-                sh 'docker compose build'
-            }
-        }
-        stage('4. Pushing the image to dockerhub') {
-            steps {
-                echo 'Pushing the image to Docker-Hub.'
-                withCredentials([usernamePassword(credentialsId: 'docker-pass',
-                                                  usernameVariable: 'DH_USER',
-                                                  passwordVariable: 'DH_PASSWORD')]) {
-                    
-                    sh 'echo "$DH_PASSWORD" | docker login -u "$DH_USER" --password-stdin'
-                    
-                    
-                    sh "docker tag voting-app-frontend:latest ${DOCKER_USER}/${DOCKER_IMAGE}-frontend:${IMAGE_TAG}"
-                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}-frontend:${IMAGE_TAG}"
-                    
-                
-                    sh "docker tag voting-app-backend:latest ${DOCKER_USER}/${DOCKER_IMAGE}-backend:${IMAGE_TAG}"
-                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}-backend:${IMAGE_TAG}"                    
+        stages {
+            stage('code checkout') {
+                steps {
+                    checkout scm
                 }
-            } 
-        } 
-    } 
+            }
+            stage ('Build and push to docker hub') {
+                steps {
+                    sh 'docker-compose build'
+                }
+            }
+            stage ('Pushing to the dockerhub') {
+                steps {
+                    withCredential([usernamePassword, (credentialsId : 'docker-pass',
+                                                      usernameVariable : 'DH_USER',
+                                                      userpasswordVariable : 'DH_PASS')]) {
+                        sh "docker login -u ${DH_USER} -p ${DH_PASS}"
+                        sh "docker build -t ${DOCKER_IMAGE} ."
+                        sh "docker push ${DOCKER_IMAGE}"
+                    }
+                }
+            }
+            stage('Infrastructure deployment') {
+                steps {
+                    sh """
+                        export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+                        export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+                        terraform init
+                        terraform apply -auto-approve
+                    """
+                }
+            }
+        }
+    }
 
     post {
-        success {
-            echo 'Build was successful and Image pushed to Dockerhub successfully.'
-        }
-        failure {
-            echo 'Build was Un-successful hence image was not pushed to Dockerhub.'
+        always {
+            success {
+                echo "deployed successfully"
+            }
+            failure {
+                echo "failed  to deploy"
+            }
         }
     }
-}
+
+                                                      
