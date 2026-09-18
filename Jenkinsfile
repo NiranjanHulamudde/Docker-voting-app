@@ -22,7 +22,7 @@ pipeline {
                 steps {
                     withCredentials([usernamePassword, (credentialsId: 'docker-pass',
                                                       usernameVariable: 'DH_USER',
-                                                      userpasswordVariable: 'DH_PASS')]) {
+                                                      passwordVariable: 'DH_PASS')]) {
                         sh "docker login -u ${DH_USER} -p ${DH_PASS}"
                         sh "docker build -t ${DOCKER_IMAGE} ."
                         sh "docker push ${DOCKER_IMAGE}"
