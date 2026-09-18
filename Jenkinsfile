@@ -20,7 +20,7 @@ pipeline {
             }
             stage ('Pushing to the dockerhub') {
                 steps {
-                    withCredential([usernamePassword, (credentialsId : 'docker-pass',
+                    withCredentials([usernamePassword, (credentialsId : 'docker-pass',
                                                       usernameVariable : 'DH_USER',
                                                       userpasswordVariable : 'DH_PASS')]) {
                         sh "docker login -u ${DH_USER} -p ${DH_PASS}"
@@ -30,10 +30,13 @@ pipeline {
                 }
             }
             stage('Infrastructure deployment') {
-                steps {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'aws-credentials',
+                                                 usernameVariable: 'AWS_KEY',
+                                                 passwordVariable: 'AWS_SECRET')]) {
                     sh """
-                        export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-                        export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+                        export AWS_ACCESS_KEY_ID=${AWS_KEY}
+                        export AWS_SECRET_ACCESS_KEY=${AWS_SECRET}
                         terraform init
                         terraform apply -auto-approve
                     """
@@ -43,14 +46,12 @@ pipeline {
     }
 
     post {
-        always {
-            success {
+        success {
                 echo "deployed successfully"
             }
-            failure {
+        failure {
                 echo "failed  to deploy"
             }
         }
     }
-
                                                       
