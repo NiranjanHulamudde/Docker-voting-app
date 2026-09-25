@@ -9,7 +9,7 @@ services:
     build: ./frontend            # Looks inside the frontend folder for the Nginx Dockerfile
     container_name: voting-frontend
     ports:
-      - "5000:80"                # Maps host port 5000 to container port 80
+      - "5000:5000"                # Maps host port 5000 to container port 80
     networks:
       - voting-app-net
     depends_on:
