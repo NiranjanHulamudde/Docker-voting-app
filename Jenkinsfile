@@ -23,7 +23,7 @@ pipeline {
         stage ('changing the directory') {
              steps {
                 dir('backend') {
-                    sh ./venv/bin/python3 -m pytest app.py
+                    sh './venv/bin/python3 -m pytest app.py'
                 }
             }
          }
