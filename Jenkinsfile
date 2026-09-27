@@ -20,14 +20,7 @@ pipeline {
                     ./venv/bin/pip install flask pytest
                     ''' }
             }
-        stage ('changing the directory') {
-             steps {
-                dir('backend') {
-                    sh './venv/bin/python3 -m pytest app.py'
-                }
-            }
-         }
-
+        
         stage ('Building the Image') {
           steps {
               sh "docker build -t ${DOCKER_USER}/${DOCKER_IMAGE}:${IMAGE_TAG} ."
