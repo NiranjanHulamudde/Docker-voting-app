@@ -18,8 +18,13 @@ pipeline {
                     . venv/bin/activate
                     ./venv/bin/pip install --upgrade pip
                     ./venv/bin/pip install flask pytest
-                    ./venv/bin/python3 -m pytest app.py
-                  '''
+                    '''
+            }
+            steps {
+                dir('backend') {
+                    sh ./venv/bin/python3 -m pytest app.py
+                }
+                }
             }
         }
       stage ('Building the Image') {
