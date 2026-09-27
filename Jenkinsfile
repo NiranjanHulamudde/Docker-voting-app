@@ -53,5 +53,26 @@ pipeline {
                 }
             }
         }
+        stage ('Infrastructure provisioning') {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
+                AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
+            }
+            steps {
+                dir('terraform') {
+                    sh 'terraform init'
+                    sh 'terraform apply --auto-approve'
+                }
+            }
+        }       
+            }
+    
+post {
+        success {
+            echo 'Deployed and provisioned successfully'
+        }
+        failure {
+            echo 'Failed to proceed' 
+        }
     }
 }
