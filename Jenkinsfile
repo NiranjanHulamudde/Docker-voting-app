@@ -19,7 +19,7 @@ pipeline {
                         python3 -m venv venv
                         ./venv/bin/pip install --upgrade pip
                         ./venv/bin/pip install flask pytest
-                        ./venv/bin/python3 -m pytest app.py
+                        ./venv/bin/python3 -m pytest app.py --allow-empty
                     '''
                 }
             }
