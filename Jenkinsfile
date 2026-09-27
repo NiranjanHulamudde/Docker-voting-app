@@ -1,41 +1,57 @@
 pipeline {
     agent any
     environment {
-        DOCKER_USER = 'niranjanhulamudde'
+        DOCKER_USER  = 'niranjanhulamudde'
         DOCKER_IMAGE = 'docker-voting-app'
-        IMAGE_TAG = 'latest'
+        IMAGE_TAG    = "v.{env.BUILD_NUMBER}"
     }
     stages {
-        stage ('Download and check the source code') {
+        stage('Download and check the source code') {
             steps {
                 checkout scm
             }
         }
-        stage ('Running tests') {
-            steps {
-                sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    ./venv/bin/pip install --upgrade pip
-                    ./venv/bin/pip install flask pytest
-                    ''' }
-            }
         
-        stage ('Building the Image') {
-          steps {
-              sh 'docker compose up -d'
-              sh "docker build -t ${DOCKER_USER}/${DOCKER_IMAGE}:${IMAGE_TAG} ."
-          }
-      }
-        stage ('Pushing the image to Dockerhub') {
-          steps {
-              withCredentials([usernamePassword(credentialsId: 'docker-pass',
-                                               usernameVariable: 'dh_user',
-                                               passwordVariable: 'dh_pass' )] ) {
-                sh "echo ${dh_pass} | docker login -u ${dh_user} --password-stdin"
-                sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}:${IMAGE_TAG}"
-              }
-          }
-      }
+        stage('Running tests') {
+            steps {
+                dir('backend') { // Shifts focus into the backend directory
+                    sh '''
+                        python3 -m venv venv
+                        ./venv/bin/pip install --upgrade pip
+                        ./venv/bin/pip install flask pytest
+                        ./venv/bin/python3 -m pytest app.py
+                    '''
+                }
+            }
+        }
+        
+        stage('Building the Images') {
+            steps {
+                // Build Backend Image out of its dedicated subfolder
+                dir('backend') {
+                    sh "docker build -t ${DOCKER_USER}/${DOCKER_IMAGE}-backend:${IMAGE_TAG} ."
+                }
+                // Build Frontend Image out of its dedicated subfolder
+                dir('frontend') {
+                    sh "docker build -t ${DOCKER_USER}/${DOCKER_IMAGE}-frontend:${IMAGE_TAG} ."
+                }
+            }
+        }
+        
+        stage('Pushing the images to Dockerhub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-pass',
+                                                 usernameVariable: 'dh_user',
+                                                 passwordVariable: 'dh_pass')]) {
+                    
+                    
+                    sh "echo \$dh_pass | docker login -u \$dh_user --password-stdin"
+                    
+                    
+                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}-backend:${IMAGE_TAG}"
+                    sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}-frontend:${IMAGE_TAG}"
+                }
+            }
+        }
     }
 }
