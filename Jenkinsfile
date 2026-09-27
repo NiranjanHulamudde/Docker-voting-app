@@ -16,6 +16,8 @@ pipeline {
                 sh '''
                     python3 -m venv venv
                     . venv/bin/activate
+                    . /venv/bin/pip install --upgrade pip
+                    . /venv/bin/pip install flask pytest
                     pytest test_app.py
                   '''
             }
