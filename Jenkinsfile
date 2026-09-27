@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage ('Download and check the source code') {
             steps {
-                chekcout scm
+                checkout scm
             }
         }
         stage ('Running tests') {
@@ -27,9 +27,9 @@ pipeline {
       }
       stage ('Pushing the image to Dockerhub') {
           steps {
-              withCredential([usernamePassword(credentialsId: 'docker-pass',
+              withCredentials([usernamePassword(credentialsId: 'docker-pass',
                                                usernameVariable: 'dh_user',
-                                               passworrdVariable: 'dh_pass' )] ) {
+                                               passwordVariable: 'dh_pass' )] ) {
                 sh "echo ${dh_pass} | docker login -u ${dh_user} --password-stdin"
                 sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}:${IMAGE_TAG}"
               }
