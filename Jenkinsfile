@@ -23,6 +23,7 @@ pipeline {
         
         stage ('Building the Image') {
           steps {
+              sh 'docker compose up'
               sh "docker build -t ${DOCKER_USER}/${DOCKER_IMAGE}:${IMAGE_TAG} ."
           }
       }
