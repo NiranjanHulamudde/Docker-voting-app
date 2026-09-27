@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOCKER_USER  = 'niranjanhulamudde'
         DOCKER_IMAGE = 'docker-voting-app'
-        IMAGE_TAG    = "v.{env.BUILD_NUMBER}"
+        IMAGE_TAG    = "v.${env.BUILD_NUMBER}"
     }
     stages {
         stage('Download and check the source code') {
