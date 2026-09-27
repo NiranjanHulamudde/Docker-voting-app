@@ -1,6 +1,6 @@
 data "aws_ami" "ubuntu" {
 	most_recent = true
-	filter = {
+	filter {
 		ami	= ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
 		name	= "name"
 }
@@ -38,7 +38,7 @@ resource "aws_instance"	"server" {
 	ami = data.aws_ami.ubuntu.id
 	instance_type = var.instance_type
 	
-	key_name = passkey
+	key_name = "passkey"
 	
 	vpc_security_group_ids = aws_security_group.web-sg.id
 	
@@ -52,8 +52,8 @@ resource "aws_instance"	"server" {
 			sudo usermod -aG docker ubuntu
 		
 			# Pulling the app from docker hub
-			sudo docker pull niranjanhulamudde/frontend:latest
-			sudo docker pull niranjanhulamudde/backend:latest
+			sudo docker pull niranjanhulamudde/docker-voting-app-frontend:latest
+            sudo docker pull niranjanhulamudde/docker-voting-app-backend:latest
 		
 			# Running the container, mapping the host port to 5000 to container port 5000
 			sudo docker run -d -p 5000:5000 --restart always --name docker-voting-app-backend niranjanhulamudde/backend:latest
