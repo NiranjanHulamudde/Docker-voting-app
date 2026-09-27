@@ -19,7 +19,7 @@ resource "aws_security_group" "web-sg" {
 		cidr_blocks = ["0.0.0.0/0"]
 }
 	ingress {
-		from port = 22
+		from_port = 22
 		to_port = 22
 		protocol = "tcp"
 		cidr_blocks = ["0.0.0.0/0"]
@@ -52,7 +52,18 @@ resource "aws_instance"	"server" {
 			sudo usermod -aG docker ubuntu
 		
 			# Pulling the app from docker hub
-			sudo docker pull 
+			sudo docker pull niranjanhulamudde/frontend:latest
+			sudo docker pull niranjanhulamudde/backend:latest
+		
+			# Running the container, mapping the host port to 5000 to container port 5000
+			sudo docker run -d -p 5000:5000 --restart always --name docker-voting-app-backend niranjanhulamudde/backend:latest
+			sudo docker run -d -p 5000:80 --restart always --name docker-voting-app-frontend niranjanhulamudde/frontend:latest
+			EOF
+
+tags = {
+	Name = "docker-voting-app"
+}
+}
 	
 
 	
