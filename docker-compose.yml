@@ -24,3 +24,41 @@ services:
       - FLASK_ENV=development
     networks:
       - voting-app-net
+  prometheus:
+      image: prom/prometheus:latest
+      container_name: prometheus
+      ports:
+        - "9090:9090"
+      volumes:
+        - ./prometheus.yml:/etc/prometheus/prometheus.yml
+        - prometheus-data:/prometheus
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+      restart: unless-stopped
+
+  grafana:
+      image: grafana/grafana:latest
+      contaienr_name: grafana
+      ports:
+        - "3000:3000"
+      volumes:
+        - grafana-data:/var/lib/grafana
+      restart: unless-stopped
+
+  cadvisor:
+      image: gcr.io/cadvisor/cadvisor:v0.49.1
+      container_name: cadvisor
+      ports:
+        - "8080:8080"
+      volumes:
+        - /:/rootfs:ro
+        - /var/run:/var/run:ro
+        - /sys:/sys:ro
+        - /var/lib/docker/:/var/lib/docker:ro
+        - /dev/disk/:/dev/disk:ro
+      restart: unless-stopped
+volumes:
+  prometheus-data:
+  grafana-data:
+
+    
