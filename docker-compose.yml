@@ -1,64 +1,53 @@
-version: '3.8'
-
-networks:
-  voting-app-net:
-    driver: bridge
-
 services:
   frontend:
-    build: ./frontend            # Looks inside the frontend folder for the Nginx Dockerfile
+    build: ./frontend
     container_name: voting-frontend
     ports:
-      - "5000:5000"                # Maps host port 5000 to container port 80
-    networks:
-      - voting-app-net
-    depends_on:
-      - backend
+      - "81:81"
+    restart: unless-stopped
 
   backend:
-    build: ./backend             # Looks inside the backend folder for the Python Dockerfile
+    build: ./backend
     container_name: voting-backend
-    expose:
-      - "5000"                   # Opens port 5000 internally to the frontend
-    environment:
-      - FLASK_ENV=development
-    networks:
-      - voting-app-net
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+
   prometheus:
-      image: prom/prometheus:latest
-      container_name: prometheus
-      ports:
-        - "9090:9090"
-      volumes:
-        - ./prometheus.yml:/etc/prometheus/prometheus.yml
-        - prometheus-data:/prometheus
-      command:
-        - '--config.file=/etc/prometheus/prometheus.yml'
-      restart: unless-stopped
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: unless-stopped
 
   grafana:
-      image: grafana/grafana:latest
-      contaienr_name: grafana
-      ports:
-        - "3000:3000"
-      volumes:
-        - grafana-data:/var/lib/grafana
-      restart: unless-stopped
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
 
   cadvisor:
-      image: gcr.io/cadvisor/cadvisor:v0.49.1
-      container_name: cadvisor
-      ports:
-        - "8080:8080"
-      volumes:
-        - /:/rootfs:ro
-        - /var/run:/var/run:ro
-        - /sys:/sys:ro
-        - /var/lib/docker/:/var/lib/docker:ro
-        - /dev/disk/:/dev/disk:ro
-      restart: unless-stopped
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    restart: unless-stopped
+
 volumes:
   prometheus-data:
   grafana-data:
 
-    

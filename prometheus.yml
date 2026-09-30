@@ -1,15 +1,15 @@
 global:
-  scrape_interval: 5s
+  scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'promotheus'
-  static_configs: 
-    - targets: ['localhost:9090']
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
 
   - job_name: 'cadvisor'
-  static_configs:
-    - targets: ['cadvisor:8080']
+    static_configs:
+      - targets: ['cadvisor:8080']
 
   - job_name: 'voting-backend'
-  static_configs:
-    - targets: ['backend:9000']
+    static_configs:
+      - targets: ['backend:5000']
