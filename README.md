@@ -1,4 +1,4 @@
-<img width="568" height="312" alt="image" src="https://github.com/user-attachments/assets/d6fbf3d2-d683-4c50-9549-fac78cd082fb" /># Production-Grade Container Monitoring & Observability Pipeline
+# Production-Grade Container Monitoring & Observability Pipeline
 
 An end-to-end cloud infrastructure monitoring framework demonstrating automated telemetry collection, time-series aggregation, and operational analytics for a containerized multi-tier web application stack.
 This repository houses the declarative orchestration configuration to launch an active multi-tier web architecture alongside a real-time observability pipeline, leveraging kernel-level container statistics to ensure absolute visibility into system performance.
