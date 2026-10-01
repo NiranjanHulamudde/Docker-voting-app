@@ -16,7 +16,9 @@ The layout utilizes a fully isolated Docker bridge network. Services isolate pub
 • Grafana Analytics Suite: The visualization abstraction tier. It handles authentication, structures dynamic query parameters, parses PromQL syntax, and formats data frames into analytical tracking grids.
 🛠️ Infrastructure Declarative Source Files
 To ensure strict compliance with Infrastructure as Code (IaC) design rules, the environment is fully declared within version-controlled structural definition files.
+
 ## 1. Unified Multi-Service Orchestrator (docker-compose.yml)
+
 Note: Network boundaries are strictly structured to circumvent browser security constraints (e.g., modern browser restrictions on generic 5000/6000 ports) and ensure host-to-container routing parity.
 yaml
 version: '3.8'
@@ -108,7 +110,7 @@ scrape_configs:
   - job_name: 'voting-backend'
     static_configs:
       - targets: ['backend:5001']
-Use code with caution.
+
 
 ## 📊 Telemetry Metrics Breakdown & PromQL Architectures
 The custom-built Grafana operational control board contains a structured quad-grid layout utilizing specific PromQL (Prometheus Query Language) calculations designed to ensure platform stability under load.
@@ -143,12 +145,12 @@ docker compose down
 
 # Force an isolated cache-free image build and spin up the multi-tier topology
 docker compose up -d --build
-Use code with caution.
+
 Verify Container Cluster Runtime
 Execute the standard socket monitoring parameters to ensure network sockets are properly bound on your host interface:
 bash
 docker ps
-Use code with caution.
+
 Network Access Target Routing Matrix
 Once deployment confirms successful container allocation, interfaces are accessible at these exact host parameters:
 Component / Layer	Access URL Interface	Operational Target
