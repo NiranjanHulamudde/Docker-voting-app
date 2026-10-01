@@ -3,14 +3,14 @@ services:
     build: ./frontend
     container_name: voting-frontend
     ports:
-      - "81:81"
+      - "5000:5000"
     restart: unless-stopped
 
   backend:
     build: ./backend
     container_name: voting-backend
     ports:
-      - "5000:5000"
+      - "5001:5001"
     restart: unless-stopped
 
   prometheus:
@@ -29,7 +29,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
-      - "3000:3000"
+      - "6002:3000"
     volumes:
       - grafana-data:/var/lib/grafana
     restart: unless-stopped
@@ -38,7 +38,7 @@ services:
     image: gcr.io/cadvisor/cadvisor:v0.49.1
     container_name: cadvisor
     ports:
-      - "8080:8080"
+      - "8001:8001"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
