@@ -2,31 +2,25 @@
 
 An end-to-end cloud infrastructure monitoring framework demonstrating automated telemetry collection, time-series aggregation, and operational analytics for a containerized multi-tier web application stack.
 This repository houses the declarative orchestration configuration to launch an active multi-tier web architecture alongside a real-time observability pipeline, leveraging kernel-level container statistics to ensure absolute visibility into system performance.
+
 # 🏗️ System Architecture & Data Flow
-The layout utilizes a fully isolated Docker bridge network. Services isolate public-facing routing tables while remaining seamlessly accessible to the telemetry engine through internal DNS service aliases.
-text
-       ╔══════════════════════════════════════════════════════╗
-       ║                  Grafana Dashboards                  ║
-       ╚═══════════════════════╦══════════════════════════════╝
-                               ║ [HTTP API / PromQL]
-                               ▼
-       ╔══════════════════════════════════════════════════════╗
-       ║             Prometheus Time-Series DB                ║
-       ╚═══════════════════════▲══════════════════════════════╝
-                               ║ [Scrape Loop / HTTP Pull]
-                               ├──────────────────────────────┐
-                               │                              │
- ┌─────────────────────────────┴──────────┐      ┌────────────┴──────────┐
- │                cAdvisor                │      │    voting-backend     │
- │ (Kernel-Level Resource Telemetry Daemon)│      │    (Internal API)     │
- └──────────────┬──────────────────┬──────┘      └───────────────────────┘
-                │                  │
-                ▼ [cgroups / sys]  ▼ [cgroups / sys]
-   ┌───────────────────────────┐  ┌───────────────────────────┐
-   │      voting-frontend      │  │     Prometheus/Grafana    │
-   │    (User Interface App)   │  │    (Self-Monitoring)      │
-   └───────────────────────────┘  └───────────────────────────┘
-Use code with caution.
+
+The layout utilizes a fully isolated Docker bridge network. Services isolate public-facing routing tables while remaining accessible to the telemetry engine through internal DNS service aliases.
+
+  ┌────────────────────────────────────────────────────────┐
+  │                   Grafana Dashboard                    │
+  └───────────┬────────────────────────────────┬───────────┘
+              │ (Reads Data)                   │ 
+  ┌───────────▼───────────┐        ┌───────────▼───────────┐
+  │      Prometheus       │◄───────┤       cAdvisor        │
+  │     (Time Series)     │ Scrapes│ (Container Metrics)   │
+  └───────────▲───────────┘        └───────────▲───────────┘
+              │ Scrapes                        │ Collects Runtime Data
+  ┌───────────┴───────────┐        ┌───────────┴───────────┐
+  │    voting-backend     │        │    voting-frontend    │
+  │     (Microservice)    │        │      (User UI)        │
+  └───────────────────────┘        └───────────────────────┘
+
 ## Infrastructure Lifecycle Components
 • Application Services (voting-frontend & voting-backend): The functional business application core under observation. The frontend layer captures inbound traffic and pipes asynchronous computational data to the isolated API backend tier.
 • cAdvisor (Container Advisor): A native daemon that mounts host core directories (/sys, /var/lib/docker) to hook directly into Linux namespaces and kernel cgroups. It dynamically extracts memory thresholds, continuous CPU processing times, network throughput, and hardware I/O statistics across all active containers.
