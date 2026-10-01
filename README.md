@@ -156,7 +156,7 @@ Once deployment confirms successful container allocation, interfaces are accessi
 Component / Layer	Access URL Interface	Operational Target
 Voting App UI	http://localhost:5000	End-User Interaction Web Portal
 cAdvisor Stats UI	http://localhost:8001	Raw Cluster Node Metrics Visualizer
-
-Note - I have disabled the terraform part in the Jenkinsfile to avoid unnecessary infra build ups.
 Prometheus DB Core	http://localhost:9090/targets	Data Collection Status Checks (All must read UP)
 Grafana Dashboards	http://localhost:6002	Production Operational Analytics Control Center
+
+Note - I have disabled the terraform part in the Jenkinsfile to avoid unnecessary infra build ups.
