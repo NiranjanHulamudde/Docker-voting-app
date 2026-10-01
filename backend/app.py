@@ -3,9 +3,12 @@ from flask import Flask, request, jsonify
 from prometheus_client import make_wsgi_app, Counter
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
-app = Flask(__name__)
+from flask import Flask
+from prometheus_flask_exporter import PrometheusMetrics
 
-# 2. Define your application metrics
+app = Flask(__name__)
+metrics = PrometheusMetrics(app) 
+
 VOTE_COUNTER = Counter('total_votes_cast', 'Total number of votes processed', ['candidate'])
 
 @app.route('/vote', methods=['POST'])
@@ -13,7 +16,7 @@ def vote():
     
     candidate = request.json.get('candidate', 'unknown')
     
-    # Increasing the metric counter when vote happens
+
     VOTE_COUNTER.labels(candidate=candidate).inc()
     
     return jsonify({"status": "Vote registered!"})
