@@ -1,4 +1,4 @@
-# Distributed Docker Voting Application & CI/CD Pipeline
+# Distributed Docker Voting Application & CI/CD Pipeline 
 
 A microservices-based voting application featuring decoupled **Frontend** and **Backend** services. This repository includes the complete source code, automated test suites, a **Jenkins Declarative Pipeline** file for continuous integration/delivery, and **Terraform** configurations to provision the required cloud infrastructure automatically.
 
